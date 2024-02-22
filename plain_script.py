@@ -1,30 +1,29 @@
-#!/usr/bin/env -S pipenv run python -i
+#!/usr/bin/env -S pipenv run python
 
 import sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-def errout(wat):
-  print(f'\n\n\n{wat}\n\n\n', file=sys.stderr, flush=True)
-  sys.stderr.flush()
-
-chromeOptions = webdriver.ChromeOptions()
-chromeOptions.binary_location = '/usr/bin/chromium-browser'
-chromeOptions.add_argument("--remote-debugging-port=9222")
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = '/usr/bin/chromium-browser'
+chrome_options.add_argument("--remote-debugging-port=9222")
 # chromeOptions.add_argument("--no-sandbox")
 # chromeOptions.add_argument("--disable-shm-usage")
 
-wd = webdriver.Chrome(options=chromeOptions)
+wd = webdriver.Chrome(options=chrome_options)
 
 wd.get('http://google.com')
 assert 'Google' in wd.title
 
 reject = wd.find_element(By.XPATH, '//button[normalize-space()="Reject all"]')
 reject.click()
-
-wd.close()
+searchbox = wd.find_element(By.XPATH, '//textarea[@name="q"]')
+searchbox.send_keys('Doge\n')
+assert 'Doge - Google Search' in wd.title
 
 # import pry; pry()
+
+wd.close()
 
 
